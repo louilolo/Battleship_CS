@@ -84,12 +84,10 @@ public class Cliente {
     }
     public void EnviaBarcos() throws IOException {
         //envia coordenadas dos barcos posicionados
-        out.writeInt(posicaoBarcos.length);  // Número de linhas
-        out.writeInt(posicaoBarcos[0].length);  // Número de colunas
-
         for (int[] linha : posicaoBarcos) {
             for (int valor : linha) {
                 out.writeInt(valor);  // Enviando cada valor da matriz
+                out.writeBoolean(true);
             }
         }
     }

@@ -35,11 +35,11 @@ public class Main {
             in2 = new DataInputStream(cliente2.getInputStream());
 
             while (!in1.readBoolean()){
-
+                System.out.println("esperando barcos jogador 1");
             }
             BarcosC1 = recebeBarcos(in1);
             while (!in2.readBoolean()){
-
+                System.out.println("esperando barcos jogador 2");
             }
             BarcosC2 = recebeBarcos(in2);
 
@@ -52,13 +52,16 @@ public class Main {
     }
 
     public ArrayList<Integer> recebeBarcos(DataInputStream in) throws IOException {
-        int linhas = in.readInt();
-        int colunas = in.readInt();
+        int linhas = 5;
+        int colunas = 4;
 
         int[][] matriz = new int[linhas][colunas];
         for (int i = 0; i < linhas; i++) {
             for (int j = 0; j < colunas; j++) {
                 matriz[i][j] = in.readInt();
+                while (!in.readBoolean()){
+                    System.out.println(matriz[i][j]);
+                }
             }
         }
 
