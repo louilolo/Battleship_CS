@@ -87,9 +87,9 @@ public class Cliente {
         for (int[] linha : posicaoBarcos) {
             for (int valor : linha) {
                 out.writeInt(valor);  // Enviando cada valor da matriz
-                out.writeBoolean(true);
+                
             }
-        }
+        }out.writeBoolean(true);
     }
     private void ProcessaAcertoAdv() throws IOException {
         int[] bombaAdv = new int[2];
