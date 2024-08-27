@@ -13,6 +13,8 @@ public class BatalhaNaval extends JFrame{
     int[][] posicaoBarcos = new int[5][4];
     JPanel quadrado = new JPanel();
     JLabel pontos = new JLabel("Pontuação: 0");
+    JLabel textocentral = new JLabel();
+    boolean prontoPraEnviar = false;
     public BatalhaNaval(){
         //construtor que inicia a interface grafica do jogo
         setVisible(true);
@@ -23,9 +25,6 @@ public class BatalhaNaval extends JFrame{
     }
 
     public static void main(String[] args) throws IOException {
-        //instanciando objeto do tipo Batalha Naval e criação dos campoos de jogo
-        BatalhaNaval j = new BatalhaNaval();
-        j.CriaCampos();
         //instanciando objeto do tipo cliente para iniciar a conexao
         Cliente c = new Cliente();
         c.Comunicacao();
@@ -50,11 +49,15 @@ public class BatalhaNaval extends JFrame{
         QuadradinhoCentral("Posicione os seus Barcos");
         //chamado de funcao que permite que o usuario posicione seus barcos
         AcionaHover(0);
+        printaBarcos();
+        while(!prontoPraEnviar){
+            System.out.println("aguardando");
+        }
         //retorna o local em que foram posicionados barcos para enviar ao servidor
         return posicaoBarcos;
     }
 
-    private void CriaCampos(){
+    public void CriaCampos(){
         //criacao do campo do jogador
         for(int i=0; i<10; i++){
             for(int j=0; j<10; j++){
@@ -85,6 +88,7 @@ public class BatalhaNaval extends JFrame{
         QuadradinhoCentral("Inicio do jogo :)!");
         pontos.setBounds(1400, 5, 100, 25); // x, y, largura, altura
         add(pontos);
+        quadrado.add(textocentral);
     }
 
     public void ControlaScore(int score){
@@ -103,9 +107,7 @@ public class BatalhaNaval extends JFrame{
 
     private void QuadradinhoCentral(String dito){
         //modifica o texto central mostrado ao usuario
-        JLabel textocentral = new JLabel();
         textocentral.setText(dito);
-        quadrado.add(textocentral);
     }
 
     private void AcionaHover(int contaCliques) {
@@ -119,6 +121,7 @@ public class BatalhaNaval extends JFrame{
         if (contaCliques >= tamanhobarcos.length) {
             remove(instrucao);
             printaBarcos();
+            prontoPraEnviar = true;
             return;}
         int size = tamanhobarcos[contaCliques];
         //variavel que controla a orientação do barco que o jogador quer posicionar

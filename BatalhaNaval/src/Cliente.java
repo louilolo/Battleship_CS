@@ -13,6 +13,7 @@ public class Cliente {
     private final DataOutputStream out;
     BatalhaNaval jogo = new BatalhaNaval();
     int[][] posicaoBarcos = new int[5][4];
+    boolean prontoParaEnviar = false;
 
     public Cliente() throws IOException{
         //construtor estabelece a conexao com o host a partir do IP e da Porta
@@ -20,6 +21,8 @@ public class Cliente {
         //instanciadas variaveis que permitem a leitura e escrita de dados primitivos
         in = new DataInputStream(cliente.getInputStream());
         out = new DataOutputStream(cliente.getOutputStream());
+        //instanciando objeto do tipo Batalha Naval e criação dos campoos de jogo
+        jogo.CriaCampos();
     }
 
     public void Comunicacao() throws IOException {
@@ -49,6 +52,8 @@ public class Cliente {
             System.out.println("Conexao estabelecida");
             //se a conexao foi estabelecida, inicia o jogo com o posicionamento dos barcos
             posicaoBarcos = jogo.InicioJogo();
+            prontoParaEnviar = true;
+            out.writeBoolean(prontoParaEnviar);
             //envia barcos posicionados para o server
             EnviaBarcos();
         }
