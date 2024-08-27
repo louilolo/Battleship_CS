@@ -46,7 +46,7 @@ public class BatalhaNaval extends JFrame{
     }
 
     public int[][] InicioJogo(){
-        QuadradinhoCentral("Posicione os seus Barcos");
+        QuadradinhoCentral("Bote Barcos");
         //chamado de funcao que permite que o usuario posicione seus barcos
         AcionaHover(0);
         printaBarcos();
@@ -106,6 +106,7 @@ public class BatalhaNaval extends JFrame{
     }
 
     private void QuadradinhoCentral(String dito){
+        textocentral.setBounds(0,50,100,25);
         //modifica o texto central mostrado ao usuario
         textocentral.setText(dito);
     }
