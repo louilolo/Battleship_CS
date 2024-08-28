@@ -27,8 +27,10 @@ public class Cliente {
 
     public void Comunicacao() throws IOException {
         int[] bomba = new int[2];
-        String leitura = in.readUTF();
+        String leitura;
         do{
+            leitura = in.readUTF();
+            System.out.println(leitura);
             //filtra o tipo de sinal recebido pelo servidor
             switch (leitura) {
                 //sinal de conexao
@@ -42,7 +44,7 @@ public class Cliente {
                 //sinal de vitoria
                 case "E" -> Vitoria();
             }
-        }while (!in.readUTF().equals("bye"));
+        }while (!leitura.equals("bye"));
         FechaConexao();
     }
 
@@ -67,10 +69,13 @@ public class Cliente {
     }
 
     private int[] ProcessaVez() throws IOException {
+        System.out.println("vez de alguem");
         int[] bomba = new int[2];
         //verifica se é a vez do jogador ou do adversario
         if(in.readBoolean()){
             bomba = jogo.MinhaVez();
+            System.out.println(bomba[0]);
+            System.out.println(bomba[1]);
             EnviaBomba(bomba);
         } else{
             jogo.VezDoAdv();
@@ -87,9 +92,11 @@ public class Cliente {
         for (int[] linha : posicaoBarcos) {
             for (int valor : linha) {
                 out.writeInt(valor);  // Enviando cada valor da matriz
-                
             }
-        }out.writeBoolean(true);
+        }
+        while(!in.readBoolean()){
+            System.out.println("esperando barcos do oponente");
+        }
     }
     private void ProcessaAcertoAdv() throws IOException {
         int[] bombaAdv = new int[2];

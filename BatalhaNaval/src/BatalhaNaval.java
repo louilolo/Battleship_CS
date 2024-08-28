@@ -218,6 +218,7 @@ public class BatalhaNaval extends JFrame{
     }
 
     public int[] MinhaVez() {
+        System.out.println("MINHA VEZ");
         QuadradinhoCentral("Sua vez");
         //variavel que guarda a coordenada da bomba escolhida
         int[] botaoClicado = new int[2];

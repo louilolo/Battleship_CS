@@ -43,6 +43,9 @@ public class Main {
             }
             BarcosC2 = recebeBarcos(in2);
 
+            out1.writeBoolean(true);
+            out2.writeBoolean(true);
+
             System.out.println("Barcos do Cliente 1: " + BarcosC1.size());
             System.out.println("Barcos do Cliente 2: " + BarcosC2.size());
 
@@ -59,9 +62,7 @@ public class Main {
         for (int i = 0; i < linhas; i++) {
             for (int j = 0; j < colunas; j++) {
                 matriz[i][j] = in.readInt();
-                while (!in.readBoolean()){
-                    System.out.println(matriz[i][j]);
-                }
+                System.out.println(matriz[i][j]);
             }
         }
 
