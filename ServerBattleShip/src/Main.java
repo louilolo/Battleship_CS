@@ -75,31 +75,23 @@ public class Main {
                 sb.setLength(0);
                 if (matriz[i][j] == matriz[i][j + 2]) {
                     cte = matriz[i][j];
-                    if (matriz[i][j + 1] > matriz[i][j + 3]) {
-                        vf = matriz[i][j + 1];
-                        v0 = matriz[i][j + 3];
-                    } else {
-                        vf = matriz[i][j + 3];
-                        v0 = matriz[i][j + 1];
-                    }
+                    vf = matriz[i][j + 3];
+                    v0 = matriz[i][j + 1];
                     for (; v0 <= vf; v0++) {
                         sb.append(cte).append(v0);
                         int bloco = Integer.parseInt(sb.toString());
                         listaBarco.add(bloco);
+                        sb.setLength(0);
                     }
                 } else {
                     cte = matriz[i][j + 1];
-                    if (matriz[i][j] > matriz[i][j + 2]) {
-                        vf = matriz[i][j];
-                        v0 = matriz[i][j + 2];
-                    } else {
-                        vf = matriz[i][j + 2];
-                        v0 = matriz[i][j];
-                    }
+                    vf = matriz[i][j + 2];
+                    v0 = matriz[i][j];
                     for (; v0 <= vf; v0++) {
                         sb.append(v0).append(cte);
                         int bloco = Integer.parseInt(sb.toString());
                         listaBarco.add(bloco);
+                        sb.setLength(0);
                     }
                 }
             }
@@ -126,6 +118,7 @@ public class Main {
                 int bomba = Integer.parseInt(String.valueOf(coisa) + String.valueOf(coiso));
             
                 boolean acertou = verificacaoBombas(BarcosC2, bomba);
+                System.out.println(acertou);
                 if (acertou) {
                     score1++;
                     System.out.println("Jogador 1 acertou! Score1: " + score1);
@@ -134,12 +127,12 @@ public class Main {
                 }
 
                 out1.writeUTF("C");
-                out1.writeInt(bomba);
+                out1.writeBoolean(acertou);
                 out1.writeInt(score1);
-                out1.writeInt(score2);
 
                 out2.writeUTF("D");
-                out2.writeInt(bomba);
+                out2.writeInt(coisa);
+                out2.writeInt(coiso);
             } else {
                 out2.writeUTF("B");
                 out2.writeBoolean(true);
@@ -158,15 +151,16 @@ public class Main {
                 }
 
                 out2.writeUTF("C");
-                out2.writeInt(bomba);
+                out2.writeBoolean(acertou);
                 out2.writeInt(score2);
-                out2.writeInt(score1);
 
                 out1.writeUTF("D");
-                out1.writeInt(bomba);
+                out1.writeInt(coisa);
+                out1.writeInt(coiso);
             }
 
             vezDoUm = !vezDoUm;
+            System.out.println(vezDoUm);
         }
 
         if (score1 == BarcosC2.size()) {
@@ -182,7 +176,13 @@ public class Main {
             out2.writeBoolean(true);
             System.out.println("Jogador 2 venceu!");
         }
-
+        out1.writeUTF("bye");
+        out2.writeUTF("bye");
+        try {
+            Thread.sleep(5000); // espera 5 segundos antes de limpar
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         out1.close();
         out2.close();
         in1.close();

@@ -29,14 +29,6 @@ public class BatalhaNaval extends JFrame{
         //instanciando objeto do tipo cliente para iniciar a conexao
         Cliente c = new Cliente();
         c.Comunicacao();
-        /*int[] bomba = j.MinhaVez();
-        j.ControlaScore(1);
-        j.AcionaHover(0);
-        //Cliente c = new Cliente();
-        //c.EnviaBomba(bomba);
-        //c.FechaConexao();
-        j.ProcessaBomba(bomba, true);
-        j.QuadradinhoCentral("oi");*/
     }
     private void printaBarcos(){
         for(int i=0; i<5; i++){
@@ -47,7 +39,7 @@ public class BatalhaNaval extends JFrame{
     }
 
     public int[][] InicioJogo(){
-        QuadradinhoCentral("Bote Barcos");
+        QuadradinhoCentral("Bote seus Barcos");
         //chamado de funcao que permite que o usuario posicione seus barcos
         AcionaHover(0);
         printaBarcos();
@@ -83,12 +75,15 @@ public class BatalhaNaval extends JFrame{
         add(texto2);
         //criacao de um quadro central para passar informacoes ao jogador
         quadrado.setBounds(715, 370,95,95);
+        quadrado.setLayout(new GridBagLayout());
         quadrado.setBackground(Color.PINK);
         quadrado.setVisible(true);
         add(quadrado);
         QuadradinhoCentral("Inicio do jogo :)!");
         pontos.setBounds(1400, 5, 100, 25); // x, y, largura, altura
         add(pontos);
+        textocentral.setHorizontalAlignment(SwingConstants.CENTER);
+        textocentral.setVerticalAlignment(SwingConstants.CENTER);
         quadrado.add(textocentral);
     }
 
@@ -107,9 +102,27 @@ public class BatalhaNaval extends JFrame{
     }
 
     private void QuadradinhoCentral(String dito){
-        textocentral.setBounds(0,50,100,25);
         //modifica o texto central mostrado ao usuario
         textocentral.setText(dito);
+        ajustarTamanhoFonte(textocentral, 95);
+    }
+    public static void ajustarTamanhoFonte(JLabel label, int larguraMaxima) {
+        Font fonte = label.getFont();
+        String texto = label.getText();
+
+        // Obtém o componente de medição de fonte
+        FontMetrics metrics = label.getFontMetrics(fonte);
+        int larguraTexto = metrics.stringWidth(texto);
+
+        // Diminui a fonte até o texto caber na largura especificada
+        while (larguraTexto > larguraMaxima) {
+            fonte = fonte.deriveFont((float) fonte.getSize() - 1);
+            metrics = label.getFontMetrics(fonte);
+            larguraTexto = metrics.stringWidth(texto);
+        }
+
+        // Define a fonte ajustada para o JLabel
+        label.setFont(fonte);
     }
 
     private void AcionaHover(int contaCliques) {
@@ -132,7 +145,7 @@ public class BatalhaNaval extends JFrame{
         ImageIcon emptyIcon = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
         Image img = null;
         try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("barco.jpeg")));
+            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("barco.jpg")));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -211,7 +224,7 @@ public class BatalhaNaval extends JFrame{
                     }
                 };
                 //remove os ActionListeners
-                if (((horizontal[0] && finalI + size <= 10)||(!horizontal[0] && finalJ + size <= 10))&&meuCampo[i][j].isEnabled()) {
+                if (((horizontal[0] && (finalI + size) <= 11)||(!horizontal[0] && (finalJ + size) <= 11))&&meuCampo[i][j].isEnabled()) {
                     meuCampo[i][j].addActionListener(actionListeners[i][j]);
                 }
             }
@@ -275,7 +288,7 @@ public class BatalhaNaval extends JFrame{
         CamposBatalha[bomba[0]][bomba[1]].setEnabled(false);
         for(int i=0; i<10; i++){
             for(int j=0; j<10; j++){
-                if(i!=bomba[0]&&j!=bomba[1]) {
+                if(i!=bomba[0]||j!=bomba[1]) {
                     CamposBatalha[i][j].setEnabled(true);
                 }
             }
@@ -289,12 +302,14 @@ public class BatalhaNaval extends JFrame{
             //adiciona imagem de x se errou
             Image img = null;
             try {
-                img = ImageIO.read(Objects.requireNonNull(getClass().getResource("xis.png")));
+                img = ImageIO.read(Objects.requireNonNull(getClass().getResource("xis.jpg")));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
             CamposBatalha[bomba[0]][bomba[1]].setDisabledIcon(new ImageIcon(img));
+            CamposBatalha[bomba[0]][bomba[1]].setIcon(new ImageIcon(img));
         }
+        esperar(3000);
     }
 
     public void VezDoAdv(){
@@ -306,9 +321,9 @@ public class BatalhaNaval extends JFrame{
         //processa o bombardeio que o jogador recebeu do adversario e coloca uma imagem correspondente ao acerto
         if(meuCampo[bombaAdv[0]][bombaAdv[1]].isEnabled()){
             meuCampo[bombaAdv[0]][bombaAdv[1]].setEnabled(false);
-            foto = "xis.png";
+            foto = "xis.jpg";
         }else{
-            foto = "bomba.png";
+            foto = "explosao.jpg";
         }
         Image img = null;
         try {
@@ -316,7 +331,7 @@ public class BatalhaNaval extends JFrame{
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        CamposBatalha[bombaAdv[0]][bombaAdv[1]].setDisabledIcon(new ImageIcon(img));
+        meuCampo[bombaAdv[0]][bombaAdv[1]].setDisabledIcon(new ImageIcon(img));
     }
 
     public void FimDeJogo(boolean venceu){
@@ -326,8 +341,27 @@ public class BatalhaNaval extends JFrame{
         }else{
             QuadradinhoCentral("Você perdeu :(");
         }
+        esperar(5000);
+    }
+    public void esperar(int mili) {
+        // Cria um CountDownLatch que vai "travar" até ser liberado
+        CountDownLatch latch = new CountDownLatch(1);
+
+        // Cria um Timer que liberará o latch após o tempo especificado
+        Timer timer = new Timer(mili, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                latch.countDown(); // Libera o CountDownLatch
+                ((Timer) e.getSource()).stop(); // Para o timer após disparar
+            }
+        });
+
+        timer.setRepeats(false); // Define para rodar apenas uma vez
+        timer.start(); // Inicia o Timer
+
         try {
-            Thread.sleep(5000); // espera 5 segundos antes de limpar
+            // Faz o programa "esperar" até o latch ser liberado pelo Timer
+            latch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

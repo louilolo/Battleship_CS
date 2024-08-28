@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
@@ -17,7 +15,7 @@ public class Cliente {
 
     public Cliente() throws IOException{
         //construtor estabelece a conexao com o host a partir do IP e da Porta
-        Socket cliente = new Socket(HOST, PORT);
+        cliente = new Socket(HOST, PORT);
         //instanciadas variaveis que permitem a leitura e escrita de dados primitivos
         in = new DataInputStream(cliente.getInputStream());
         out = new DataOutputStream(cliente.getOutputStream());
@@ -86,6 +84,7 @@ public class Cliente {
         //verifica se o o jogador acertou e recebe a sua pontuação no momento
         jogo.ProcessaBomba(bomba, in.readBoolean());
         jogo.ControlaScore(in.readInt());
+        System.out.println("processei acerto");
     }
     public void EnviaBarcos() throws IOException {
         //envia coordenadas dos barcos posicionados
