@@ -4,6 +4,7 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -217,19 +218,20 @@ public class BatalhaNaval extends JFrame{
         }
     }
 
+
     public int[] MinhaVez() {
         System.out.println("MINHA VEZ");
         QuadradinhoCentral("Sua vez");
-        //variavel que guarda a coordenada da bomba escolhida
+
         int[] botaoClicado = new int[2];
-        //criacao que variavel que permite a interacao com os botoes
+        CountDownLatch latch = new CountDownLatch(1);
+
         ActionListener[][] actionListeners = new ActionListener[10][10];
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                int finalJ = j;
                 int finalI = i;
+                int finalJ = j;
                 actionListeners[i][j] = new ActionListener() {
-                    //funcao que permite a escolha do local para posicionar a bomba
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         botaoClicado[0] = finalI;
@@ -242,24 +244,32 @@ public class BatalhaNaval extends JFrame{
                         }
                         CamposBatalha[finalI][finalJ].setIcon(new ImageIcon(img));
                         CamposBatalha[finalI][finalJ].setDisabledIcon(new ImageIcon(img));
-                        for(int h=0; h<10; h++){
-                            for(int g=0; g<10; g++){
-                                if(finalI!=h || finalJ!=g) {
+                        for (int h = 0; h < 10; h++) {
+                            for (int g = 0; g < 10; g++) {
+                                if (finalI != h || finalJ != g) {
                                     CamposBatalha[h][g].setEnabled(false);
                                 }
-                                //remove as funcoes dos botoes
                                 CamposBatalha[h][g].removeActionListener(actionListeners[h][g]);
                             }
                         }
+                        latch.countDown(); // Libera a espera
                     }
                 };
-                if(CamposBatalha[i][j].isEnabled()) {
+                if (CamposBatalha[i][j].isEnabled()) {
                     CamposBatalha[i][j].addActionListener(actionListeners[i][j]);
                 }
             }
         }
+
+        try {
+            latch.await(); // Espera até que o botão seja clicado
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return botaoClicado;
     }
+
     public void ProcessaBomba(int[] bomba, boolean acerto){
         //desativa o local da bomba e ativa os outros
         CamposBatalha[bomba[0]][bomba[1]].setEnabled(false);
