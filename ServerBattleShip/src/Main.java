@@ -121,7 +121,10 @@ public class Main {
                 out2.writeUTF("B");
                 out2.writeBoolean(false);
 
-                int bomba = in1.readInt();
+                int coisa = in1.readInt();
+                int coiso = in1.readInt();
+                int bomba = Integer.parseInt(String.valueOf(coisa) + String.valueOf(coiso));
+            
                 boolean acertou = verificacaoBombas(BarcosC2, bomba);
                 if (acertou) {
                     score1++;
@@ -143,7 +146,9 @@ public class Main {
                 out1.writeUTF("B");
                 out1.writeBoolean(false);
 
-                int bomba = in2.readInt();
+                int coisa = in2.readInt();
+                int coiso = in2.readInt();
+                int bomba = Integer.parseInt(String.valueOf(coisa) + String.valueOf(coiso));
                 boolean acertou = verificacaoBombas(BarcosC1, bomba);
                 if (acertou) {
                     score2++;
