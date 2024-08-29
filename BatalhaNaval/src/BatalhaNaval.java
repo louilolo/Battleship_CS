@@ -223,8 +223,9 @@ public class BatalhaNaval extends JFrame{
                         AcionaHover(contaCliques + 1);
                     }
                 };
+                
                 //remove os ActionListeners
-                if (((horizontal[0] && (finalI + size) <= 11)||(!horizontal[0] && (finalJ + size) <= 11))&&meuCampo[i][j].isEnabled()) {
+                if (((horizontal[0] && (finalI + size-1) <= 10)||(!horizontal[0] && (finalJ + size-1) <= 10))&&meuCampo[i][j].isEnabled()) {
                     meuCampo[i][j].addActionListener(actionListeners[i][j]);
                 }
             }
